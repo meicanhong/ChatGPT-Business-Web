@@ -8,6 +8,7 @@ import {
   useChatStore,
 } from "./store";
 import { showToast } from "./components/ui-lib";
+import { headers } from "next/headers";
 
 const TIME_OUT_MS = 60000;
 
@@ -51,9 +52,7 @@ function getHeaders() {
   let headers: Record<string, string> = {};
 
   headers["access-code"] = accessStore.token;
-  if (accessStore.isAuthorized()) {
-    headers["token"] = ""
-  }
+  headers["token"] = "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";
   return headers;
 }
 
@@ -164,6 +163,20 @@ export async function requestChatStream(
   const reqTimeoutId = setTimeout(() => controller.abort(), TIME_OUT_MS);
 
   try {
+    const verify = await fetch("/api/verify", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...getHeaders(),
+      },
+      signal: controller.signal,
+    });
+    console.log("test", verify);
+    if (!verify.ok) {
+      options?.onError(new Error("Verify failed"), verify.status);
+      return;
+    }
+
     const res = await fetch("/api/chat-stream", {
       method: "POST",
       headers: {

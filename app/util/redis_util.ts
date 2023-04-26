@@ -1,40 +1,22 @@
-const redis = require('redis');
-const client = redis.createClient();
+import { createClient } from "redis";
 
-client.on("error", (error: any) => {
-    console.error("Redis Error: ", error);
-});
+const client = createClient();
+client.on("error", (err) => console.log("Redis Client Error", err));
 
-async function isConnect() {
-    if (!client.isOpen) {
-        await client.connect();
-    }
+export async function verifyToken(key: string | null) {
+  await client.connect();
+  if (key == null) {
+    await client.disconnect();
+    return false;
+  }
+  const value = await client.get(key);
+  await client.disconnect();
+  return value != null;
 }
 
-export async function verifyTaaoken(token: string|null) {
-    console.log('token', token)
-    await isConnect()
-    console.log('token', token)
-    try {
-        if (token === null) {
-            return false;
-        }
-        const result = await client.get(token);
-        if (result === null) {
-            return false;
-        }
-        return true;
-    } catch (error) {
-        console.error("Error occurred when verifying token: ", error);
-        return false;
-    }
-}
-
-export async function storeToken(token: string) {
-    await isConnect()
-    try {
-        await client.set(token, token);
-    } catch (error) {
-        console.error("Error occurred when storing token: ", error);
-    }
+export async function setToken(key: string) {
+  await client.connect();
+  await client.set(key, key);
+  await client.disconnect();
+  return key;
 }
