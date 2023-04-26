@@ -1,0 +1,18 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+  chatgpt:
+      container_name: chatgpt
+      build: .
+      restart: always
+      ports:
+        - 80:3000
+      environment:
+        - PROXY_URL=http://10.60.132.45:7890
+
+
