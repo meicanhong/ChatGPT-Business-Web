@@ -15,7 +15,8 @@ services:
     ports:
       - 80:3000
     environment:
-      - PROXY_URL=http://10.60.132.45:7890
+      - OPENAI_API_KEY=
+      - PROXY_URL=
     networks:
       - my-net
 volumes:
