@@ -52,7 +52,7 @@ function getHeaders() {
   let headers: Record<string, string> = {};
 
   headers["access-code"] = accessStore.token;
-  headers["token"] = "";
+  headers["token"] = process.env.OPENAI_API_KEY || "";
   return headers;
 }
 
