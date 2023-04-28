@@ -16,9 +16,9 @@ export async function verifyToken(key: string | null) {
   return value != null;
 }
 
-export async function setToken(key: string) {
+export async function setToken(key: string, days: number = 1) {
   await client.connect();
-  await client.set(key, key);
+  await client.setEx(key, days * 24 * 60 * 60, key);
   await client.disconnect();
   return key;
 }
