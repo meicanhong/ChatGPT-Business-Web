@@ -13,13 +13,13 @@ export async function GET(req: NextRequest) {
 
   console.log(result);
 
-  if (password != "danny") {
+  if (password != process.env.PASSWORD) {
     return NextResponse.json({
       error: "Authentication failed",
     });
   }
   const value = await setToken(result);
   return NextResponse.json({
-    hello: value,
+    api_key: value,
   });
 }
