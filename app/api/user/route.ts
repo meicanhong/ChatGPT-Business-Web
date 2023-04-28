@@ -8,18 +8,18 @@ export async function GET(req: NextRequest) {
   const key = Math.random().toString(36);
 
   const hash = crypto.createHash("sha256");
-  hash.update("token");
+  hash.update(key);
   const result = hash.digest("hex").substring(0, 20);
 
   console.log(result);
 
-  if (password != "danny") {
+  if (password != process.env.PASSWORD) {
     return NextResponse.json({
       error: "Authentication failed",
     });
   }
   const value = await setToken(result);
   return NextResponse.json({
-    hello: value,
+    api_key: value,
   });
 }
