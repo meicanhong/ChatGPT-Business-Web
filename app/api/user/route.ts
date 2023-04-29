@@ -14,10 +14,10 @@ export async function GET(req: NextRequest) {
   const days = Number(req.nextUrl.searchParams.get("days")) || 1;
   const balance = Number(req.nextUrl.searchParams.get("balance")) || 100;
   const api_key = getHashKey();
-  const user = {
+  const user: User = {
     api_key: api_key,
     balance: balance,
-    days: days * 24 * 60 * 60,
+    seconds: days * 24 * 60 * 60,
   };
   const result = await initUser(api_key, JSON.stringify(user), days);
   return NextResponse.json(result);

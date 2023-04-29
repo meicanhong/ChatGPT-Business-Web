@@ -35,5 +35,5 @@ export async function initUser(key: string, value: string, seconds: number) {
   await client.connect();
   await client.setEx(key, seconds, value);
   await client.disconnect();
-  return key;
+  return value;
 }
