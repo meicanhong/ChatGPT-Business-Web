@@ -121,13 +121,13 @@ const cn = {
     },
     Token: {
       Title: "API Key",
-      SubTitle: "使用自己的 Key 可绕过密码访问限制",
+      SubTitle: "请输入 API Key 解锁",
       Placeholder: "OpenAI API Key",
     },
     Usage: {
       Title: "余额查询",
       SubTitle(used: any, total: any) {
-        return `本月已使用 $${used}，订阅总额 $${total}`;
+        return `该API Key 剩余条数余额$${used}，将在$${total}后过期`;
       },
       IsChecking: "正在检查…",
       Check: "重新检查",
