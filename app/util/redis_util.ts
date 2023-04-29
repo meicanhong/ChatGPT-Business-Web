@@ -29,7 +29,7 @@ export async function verifyToken(key: string | null) {
     if (user.balance < 0) {
       return false;
     }
-    return value != null;
+    return true;
   } finally {
     await client.disconnect();
   }
@@ -38,6 +38,16 @@ export async function verifyToken(key: string | null) {
 export async function initUser(key: string, value: string, seconds: number) {
   await client.connect();
   await client.setEx(key, seconds, value);
+  await client.disconnect();
+  return value;
+}
+
+export async function redisGet(key: string | null) {
+  if (key == null) {
+    return null;
+  }
+  await client.connect();
+  const value = await client.get(key);
   await client.disconnect();
   return value;
 }

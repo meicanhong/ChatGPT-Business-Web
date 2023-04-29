@@ -9,6 +9,7 @@ import {
 } from "./store";
 import { showToast } from "./components/ui-lib";
 import { headers } from "next/headers";
+import { User } from "@/app/api/user/user";
 
 const TIME_OUT_MS = 60000;
 
@@ -88,6 +89,21 @@ export async function requestChat(
   } catch (error) {
     console.error("[Request Chat] ", error, res.body);
   }
+}
+
+export async function requestUserBalance() {
+  const res = await fetch("/api/user/balance", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...getHeaders(),
+    },
+  });
+  const user: User = await res.json();
+  return {
+    balance: user.balance,
+    days: user.seconds / 86400,
+  };
 }
 
 export async function requestUsage() {
