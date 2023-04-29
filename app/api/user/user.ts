@@ -1,5 +1,5 @@
 export interface User {
   api_key: string;
-  days: number;
+  seconds: number;
   balance: number;
 }
