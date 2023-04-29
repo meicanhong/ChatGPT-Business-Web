@@ -80,7 +80,7 @@ export const useUpdateStore = create<UpdateStore>()(
         }));
 
         const usage = await requestUserBalance();
-
+        console.log("[Danny Debug] ", usage);
         if (usage) {
           set(() => usage);
         }
