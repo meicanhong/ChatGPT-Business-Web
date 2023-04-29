@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     balance: balance,
     seconds: days * 24 * 60 * 60,
   };
-  const result = await initUser(api_key, JSON.stringify(user), days);
+  const result = await initUser(api_key, JSON.stringify(user), user.seconds);
   return NextResponse.json(result);
 }
 
