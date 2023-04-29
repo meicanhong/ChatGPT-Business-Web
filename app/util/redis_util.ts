@@ -9,19 +9,19 @@ client.on("error", (err) => console.log("Redis Client Error", err));
 export async function verifyToken(key: string | null) {
   try {
     await client.connect();
-    console.log("[Danny Debug] User", key);
+    console.log("[Danny Debug] key", key);
     if (key == null) {
       return false;
     }
     const value = await client.get(key);
-    console.log("[Danny Debug] User", value);
+    console.log("[Danny Debug] value", value);
     if (value == null) {
       return false;
     }
     const user: User = JSON.parse(value);
     console.log("[Danny Debug] User", user);
     user.balance = user.balance - 1;
-    await client.setEx(key, user.days, JSON.stringify(user));
+    // await client.setEx(key, user.days, JSON.stringify(user));
     if (user.balance < 0) {
       return false;
     }
