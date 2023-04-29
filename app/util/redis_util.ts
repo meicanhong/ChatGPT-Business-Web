@@ -19,9 +19,13 @@ export async function verifyToken(key: string | null) {
       return false;
     }
     const user: User = JSON.parse(value);
-    console.log("[Danny Debug] User", user);
+    const seconds = await client.ttl(key);
+
     user.balance = user.balance - 1;
-    await client.setEx(key, user.seconds, JSON.stringify(user));
+    user.seconds = seconds;
+    console.log("[Danny Debug] User", user);
+
+    await client.setEx(key, seconds, JSON.stringify(user));
     if (user.balance < 0) {
       return false;
     }
