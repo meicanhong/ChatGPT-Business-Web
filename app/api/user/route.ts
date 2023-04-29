@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { setToken } from "@/app/util/redis_util";
+import { initUser } from "@/app/util/redis_util";
+import { User } from "@/app/api/user/user";
 const crypto = require("crypto");
 
 export async function GET(req: NextRequest) {
@@ -11,11 +12,15 @@ export async function GET(req: NextRequest) {
   }
 
   const days = Number(req.nextUrl.searchParams.get("days")) || 1;
-  const result = getHashKey();
-  const value = await setToken(result, days);
-  return NextResponse.json({
-    api_key: value,
-  });
+  const balance = Number(req.nextUrl.searchParams.get("balance")) || 100;
+  const api_key = getHashKey();
+  const user = {
+    api_key: api_key,
+    balance: balance,
+    days: days,
+  };
+  await initUser(api_key, JSON.stringify(user), days);
+  return NextResponse.json(user);
 }
 
 function getHashKey() {

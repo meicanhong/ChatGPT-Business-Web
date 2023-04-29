@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { setToken, verifyToken } from "@/app/util/redis_util";
+import { initUser, verifyToken } from "@/app/util/redis_util";
 
 export async function GET(req: NextRequest) {
-  const accessCode = req.headers.get("access-code");
-  const result = await verifyToken(accessCode);
+  const api_key = req.headers.get("access-code");
+  const result = await verifyToken(api_key);
   if (result == false) {
     return NextResponse.json(
       {

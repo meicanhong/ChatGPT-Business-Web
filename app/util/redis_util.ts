@@ -1,4 +1,5 @@
 import { createClient } from "redis";
+import { User } from "@/app/api/user/user";
 
 const client = createClient({
   url: "redis://10.60.132.45:6379",
@@ -6,19 +7,30 @@ const client = createClient({
 client.on("error", (err) => console.log("Redis Client Error", err));
 
 export async function verifyToken(key: string | null) {
-  await client.connect();
-  if (key == null) {
+  try {
+    await client.connect();
+    if (key == null) {
+      return false;
+    }
+    const value = await client.get(key);
+    if (typeof value != "string" || value == null) {
+      return false;
+    }
+    const user: User = JSON.parse(value);
+    user.balance = user.balance - 1;
+    await client.setEx(key, user.days, JSON.stringify(user));
+    if (user.balance < 0) {
+      return false;
+    }
+    return value != null;
+  } finally {
     await client.disconnect();
-    return false;
   }
-  const value = await client.get(key);
-  await client.disconnect();
-  return value != null;
 }
 
-export async function setToken(key: string, days: number = 1) {
+export async function initUser(key: string, value: string, days: number = 1) {
   await client.connect();
-  await client.setEx(key, days * 24 * 60 * 60, key);
+  await client.setEx(key, days * 24 * 60 * 60, value);
   await client.disconnect();
   return key;
 }
