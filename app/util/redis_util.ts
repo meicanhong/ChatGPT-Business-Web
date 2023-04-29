@@ -21,7 +21,7 @@ export async function verifyToken(key: string | null) {
     const user: User = JSON.parse(value);
     console.log("[Danny Debug] User", user);
     user.balance = user.balance - 1;
-    // await client.setEx(key, user.days, JSON.stringify(user));
+    await client.setEx(key, user.days, JSON.stringify(user));
     if (user.balance < 0) {
       return false;
     }
@@ -33,7 +33,7 @@ export async function verifyToken(key: string | null) {
 
 export async function initUser(key: string, value: string, days: number = 1) {
   await client.connect();
-  await client.setEx(key, days * 24 * 60 * 60, value);
+  await client.setEx(key, days, value);
   await client.disconnect();
   return key;
 }
