@@ -127,7 +127,7 @@ const cn = {
     Usage: {
       Title: "余额查询",
       SubTitle(used: any, total: any) {
-        return `该API Key 剩余条数余额$${used}，将在$${total}后过期`;
+        return `余额条数$${used}，将在$${total}天后过期`;
       },
       IsChecking: "正在检查…",
       Check: "重新检查",

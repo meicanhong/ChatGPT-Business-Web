@@ -104,7 +104,7 @@ export async function requestUserBalance() {
   const user: User = JSON.parse(body).user;
   return {
     balance: user.balance,
-    days: user.seconds / 86400,
+    days: Math.round((user.seconds / 86400) * 100) / 100,
   };
 }
 
