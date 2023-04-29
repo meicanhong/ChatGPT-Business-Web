@@ -99,7 +99,8 @@ export async function requestUserBalance() {
       ...getHeaders(),
     },
   });
-  const user: User = await res.json();
+  const body: string = await res.text();
+  const user: User = JSON.parse(body);
   return {
     balance: user.balance,
     days: user.seconds / 86400,
