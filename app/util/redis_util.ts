@@ -9,27 +9,40 @@ client.on("error", (err) => console.log("Redis Client Error", err));
 export async function verifyToken(key: string | null) {
   try {
     await client.connect();
-    console.log("[Danny Debug] key", key);
+    // console.log("[Danny Debug] key", key);
     if (key == null) {
       return false;
     }
     const value = await client.get(key);
-    console.log("[Danny Debug] value", value);
+    // console.log("[Danny Debug] value", value);
     if (value == null) {
       return false;
+    }
+    const user: User = JSON.parse(value);
+    if (user.balance < 0) {
+      return false;
+    }
+    return true;
+  } finally {
+    await client.disconnect();
+  }
+}
+
+export async function deductTokenBalance(key: string) {
+  try {
+    await client.connect();
+    const value = await client.get(key);
+    if (value == null) {
+      return -1;
     }
     const user: User = JSON.parse(value);
     const seconds = await client.ttl(key);
 
     user.balance = user.balance - 1;
     user.seconds = seconds;
-    console.log("[Danny Debug] User", user);
 
     await client.setEx(key, seconds, JSON.stringify(user));
-    if (user.balance < 0) {
-      return false;
-    }
-    return true;
+    return user;
   } finally {
     await client.disconnect();
   }

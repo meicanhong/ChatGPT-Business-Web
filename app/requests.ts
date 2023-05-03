@@ -189,9 +189,20 @@ export async function requestChatStream(
       },
       signal: controller.signal,
     });
-    console.log("test", verify);
     if (!verify.ok) {
       options?.onError(new Error("Verify failed"), verify.status);
+      return;
+    }
+    const balance = await fetch("/api/user/balance/deduct", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...getHeaders(),
+      },
+      signal: controller.signal,
+    });
+    if (!balance.ok) {
+      options?.onError(new Error("Insufficient balance"), balance.status);
       return;
     }
 
